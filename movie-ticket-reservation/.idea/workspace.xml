@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="9226de8d-dce1-4079-acd8-b3ff886b5871" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+        <option value="Interface" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="PREVIOUS_COMMIT_AUTHORS">
+      <list>
+        <option value="sabasgh &lt;sabasoghrati@gmail.com&gt;" />
+      </list>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/src/main/java/com/acmeplex/movieticketreservation" />
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2ozOWlctCpZ059DQ1oTdTgoALIT" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;vcs.Git&quot;,
+    &quot;spring.configuration.checksum&quot;: &quot;2b0bc0253cae702e7b3a70d79a9e4688&quot;
+  }
+}</component>
+  <component name="RunManager">
+    <configuration name="MovieTicketReservationApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="movie-ticket-reservation" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.acmeplex.movieticketreservation.MovieTicketReservationApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="9226de8d-dce1-4079-acd8-b3ff886b5871" name="Changes" comment="" />
+      <created>1731868971724</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1731868971724</updated>
+      <workItem from="1731868974349" duration="606000" />
+      <workItem from="1731875170758" duration="4612000" />
+      <workItem from="1732052567874" duration="6602000" />
+      <workItem from="1732149353430" duration="310000" />
+      <workItem from="1732165464013" duration="1150000" />
+      <workItem from="1732214694353" duration="3459000" />
+      <workItem from="1732396198660" duration="19216000" />
+      <workItem from="1732500692277" duration="1213000" />
+      <workItem from="1732582633356" duration="3461000" />
+      <workItem from="1732586128549" duration="7935000" />
+      <workItem from="1732638943321" duration="18106000" />
+      <workItem from="1732675355867" duration="7613000" />
+      <workItem from="1732731413973" duration="595000" />
+    </task>
+    <task id="LOCAL-00001" summary="Models are created&#10;Attributes are added&#10;Methods are added but their bodies are empty.">
+      <created>1732059123294</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1732059123294</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Models are created&#10;Attributes are added&#10;Methods are added but their bodies are empty.">
+      <created>1732166077557</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1732166077557</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Models are created&#10;Attributes are added&#10;Methods are added but their bodies are empty.">
+      <created>1732426599643</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1732426599643</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Models are created&#10;Attributes are added&#10;Methods are added but their bodies are empty.">
+      <created>1732590764633</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1732590764633</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Models are created&#10;Attributes are added&#10;Methods are added but their bodies are empty.">
+      <created>1732603034731</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1732603034731</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Models are created&#10;Attributes are added&#10;Methods are added but their bodies are empty.">
+      <created>1732645545702</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1732645545702</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Models are created&#10;Attributes are added&#10;Methods are added but their bodies are empty.">
+      <created>1732645781107</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1732645781107</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Models are created&#10;Attributes are added&#10;Methods are added but their bodies are empty.">
+      <created>1732681754901</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1732681754901</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Models are created&#10;Attributes are added&#10;Methods are added but their bodies are empty." />
+    <option name="LAST_COMMIT_MESSAGE" value="Models are created&#10;Attributes are added&#10;Methods are added but their bodies are empty." />
+  </component>
+</project>
