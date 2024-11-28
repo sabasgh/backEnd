@@ -1,13 +1,11 @@
 package com.acmeplex.movieticketreservation.Service;
 
 import com.acmeplex.movieticketreservation.Model.*;
-import com.acmeplex.movieticketreservation.Repository.RegisteredUserRepository;
-import com.acmeplex.movieticketreservation.Repository.SeatRepository;
-import com.acmeplex.movieticketreservation.Repository.ShowtimeRepository;
-import com.acmeplex.movieticketreservation.Repository.TicketRepository;
+import com.acmeplex.movieticketreservation.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 import java.util.Optional;
@@ -19,26 +17,43 @@ public class TicketService {
     private TicketRepository ticketRepository;
 
     @Autowired
-    private RegisteredUserRepository registeredUserRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private ShowtimeRepository showtimeRepository;
 
+    @Autowired
+    private SeatRepository seatRepository;
+
+    @Autowired
+    private SeatService seatService;
+
+    @Transactional
     public ResponseEntity<?> createTicket(int showtimeID, int seatNumber, int theatreID, int userID, String date, String ticketStatus) {
         try {
-            Optional<RegisteredUser> userOptional = registeredUserRepository.findById(userID);
+            Optional<User> userOptional = userRepository.findById(userID);
             Optional<Showtime> showtimeOptional = showtimeRepository.findById(showtimeID);
             if (userOptional.isEmpty()) {
-                throw new IllegalArgumentException("Registered user with ID " + userID + " does not exist.");
+                throw new IllegalArgumentException("User with ID " + userID + " does not exist.");
             }
             if (showtimeOptional.isEmpty()) {
                 throw new IllegalArgumentException("Showtime with ID " + showtimeID + " does not exist.");
             }
-            RegisteredUser user = userOptional.get();
-            Ticket ticket = new Ticket(seatNumber, showtimeID, date, ticketStatus, user);
+            Optional<Seat> seatOptional = Optional.ofNullable(seatService.findSeatByShowtime(showtimeOptional.get(), seatNumber));
+            if (seatOptional.isEmpty()) {
+                throw new IllegalArgumentException("Seat with Number " + seatNumber + " does not exist in Showtime with ID" + showtimeID);
+            }
+            Seat seat = seatOptional.get();
+            if (seat.getStatus().equals("Reserved")) {
+                throw new IllegalArgumentException("Seat with Number " + seatNumber + "in Showtime with ID " + showtimeID + " is already reserved!");
+            }
+            seat.setStatus("Reserved");
+            seatRepository.save(seat);
+            User user = userOptional.get();
+            Ticket ticket = new Ticket(seatNumber, showtimeOptional.get(), date, ticketStatus, user);
             Ticket savedTicket = ticketRepository.save(ticket);
             user.getTicketHistory().add(savedTicket);
-            registeredUserRepository.save(user);
+            userRepository.save(user);
             return ResponseEntity.ok(Map.of(
                     "ticketID", savedTicket.getTicketID(),
                     "status", "success"
@@ -54,5 +69,28 @@ public class TicketService {
                     "status", "failed"
             ));
         }
+    }
+
+    @Transactional
+    public double cancelTicket(int ticketID) {
+        Optional<Ticket> ticketOptional = ticketRepository.findById(ticketID);
+        if (ticketOptional.isEmpty()) {
+            throw new IllegalArgumentException("Ticket with ID " + ticketID + " does not exist.");
+        }
+        Ticket ticket = ticketOptional.get();
+        User user = ticket.getUser();
+        Seat ticketSeat = seatService.findSeatByShowtime(ticket.getShowtime(), ticket.getSeatNumber());
+        if (ticketSeat == null) {
+            throw new IllegalArgumentException("Seat not found!");
+        }
+        ticketSeat.setStatus("Available");
+        seatRepository.save(ticketSeat);
+        ticket.setStatus("Cancelled");
+        ticketRepository.save(ticket);
+        return calculateRefund(user);
+    }
+
+    private double calculateRefund(User user) {
+        return user.getUserType().equals("Registered") ? Ticket.TICKET_PRICE : Ticket.TICKET_PRICE * 0.85;
     }
 }

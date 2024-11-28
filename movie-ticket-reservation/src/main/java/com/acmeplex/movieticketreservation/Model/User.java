@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 
 @Entity
 @Setter
@@ -15,6 +17,9 @@ public class User {
     private int userID;
     private String userType;
     private String email;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Ticket> ticketHistory;
 
     public User() {
     }

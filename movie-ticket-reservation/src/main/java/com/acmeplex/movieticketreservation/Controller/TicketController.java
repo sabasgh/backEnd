@@ -4,10 +4,7 @@ import com.acmeplex.movieticketreservation.Service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -28,7 +25,17 @@ public class TicketController {
             String ticketStatus = (String) payload.get("ticketStatus");
             return ticketService.createTicket(showtimeID, seatNumber, theatreID, userID, date, ticketStatus);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error in ticket generating: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/{ticketID}")
+    ResponseEntity<?> cancelTicket(@PathVariable int ticketID){
+        try {
+            double refundAmount = ticketService.cancelTicket(ticketID);
+            return ResponseEntity.ok(Map.of("refundAmount", refundAmount));
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error in ticket cancelation: " + e.getMessage());
         }
     }
 }

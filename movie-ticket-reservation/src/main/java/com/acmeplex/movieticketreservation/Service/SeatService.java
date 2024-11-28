@@ -3,7 +3,6 @@ package com.acmeplex.movieticketreservation.Service;
 import com.acmeplex.movieticketreservation.Model.Seat;
 import com.acmeplex.movieticketreservation.Model.Showtime;
 import com.acmeplex.movieticketreservation.Repository.SeatRepository;
-import com.acmeplex.movieticketreservation.Repository.ShowtimeRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -57,5 +56,14 @@ public class SeatService {
         } catch (Exception ex) {
             throw new RuntimeException("Error occurred while reserving seats: " + ex.getMessage(), ex);
         }
+    }
+
+    public Seat findSeatByShowtime(Showtime showtime, int seatNumber) {
+        for (Seat seat : showtime.getSeats()) {
+            if (seat.getSeatNumber() == seatNumber) {
+                return seat;
+            }
+        }
+        return null;
     }
 }
