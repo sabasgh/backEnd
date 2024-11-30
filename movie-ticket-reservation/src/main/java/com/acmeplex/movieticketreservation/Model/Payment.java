@@ -16,20 +16,29 @@ public class Payment {
     private int paymentID;
 
     private String paymentType;
-    private Double amount;
+    private double amount;
+    private String cardOwner;
+    private long cardNumber;
+    private int ccv;
+    private String expiry;
 
-    public Payment(String paymentType, Double amount) {
+    public Payment(String paymentType, double amount, String cardOwner, long cardNumber, int ccv, String expiry) {
         this.paymentType = paymentType;
         this.amount = amount;
+        this.cardOwner = cardOwner;
+        this.cardNumber = cardNumber;
+        this.ccv = ccv;
+        this.expiry = expiry;
     }
 
     public Payment() {
     }
 
-    public void makePayment(){
+    public void makePayment() {
         System.out.println("payment is made...");
     }
-    public void refund(){
+
+    public void refund() {
         System.out.println("refund is proccessed...");
     }
 }

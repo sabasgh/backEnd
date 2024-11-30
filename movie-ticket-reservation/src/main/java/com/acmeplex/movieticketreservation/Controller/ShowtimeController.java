@@ -19,7 +19,7 @@ public class ShowtimeController {
     @Autowired
     private ShowtimeService showtimeService;
 
-    @GetMapping("/{showtimeID}/seats")
+    @GetMapping("/seats/{showtimeID}")
     public ResponseEntity<?> showtimeSeats(@PathVariable int showtimeID) {
         try {
             List<Map<String, Object>> seats = showtimeService.getSeatsForShowtime(showtimeID);

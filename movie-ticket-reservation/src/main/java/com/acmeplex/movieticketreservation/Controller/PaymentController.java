@@ -20,24 +20,15 @@ public class PaymentController {
     private PaymentService paymentService;
 
     @PostMapping("/")
-    public Map<String, Object> makePayment(@RequestBody Map<String, Object> paymentRequest) {
-        int ticketID = (int) paymentRequest.get("ticketID");
-        String paymentType = (String) paymentRequest.get("paymentType");
-        double amount = (double) paymentRequest.get("amount");
+    public ResponseEntity<Map<String, Object>> makePayment(@RequestBody Payment payment) {
+        boolean isPaymentSuccessful = paymentService.processPayment(payment);
 
-        try {
-            Payment payment = paymentService.processPayment(ticketID, paymentType, amount);
-            Map<String, Object> response = new HashMap<>();
-            response.put("paymentID", payment.getPaymentID());
-            response.put("status", "success");
-            return response;
-        } catch (RuntimeException e) {
-            Map<String, Object> response = new HashMap<>();
-            response.put("paymentID", null);
-            response.put("status", "failed");
-            response.put("error", e.getMessage());
-            return response;
-        }
+        // Prepare the response
+        Map<String, Object> response = new HashMap<>();
+        response.put("paymentID", isPaymentSuccessful ? payment.getPaymentID() : null);
+        response.put("status", isPaymentSuccessful ? "success" : "failed");
+
+        return ResponseEntity.ok(response);
     }
 }
 

@@ -25,14 +25,19 @@ public class Ticket {
     @JoinColumn(name = "user_id", referencedColumnName = "userID", nullable = false)
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "payment_id", referencedColumnName = "paymentID", nullable = false)
+    private Payment payment;
+
     public static final double TICKET_PRICE = 20.0; // Hardcoded ticket price
 
-    public Ticket(int seatNumber, Showtime showtime, String date, String status, User user) {
+    public Ticket(int seatNumber, Showtime showtime, String date, String status, User user, Payment payment) {
         this.seatNumber = seatNumber;
         this.showtime = showtime;
         this.date = date;
         this.status = status;
         this.user = user;
+        this.payment = payment;
     }
 
     public Ticket() {
