@@ -1,7 +1,9 @@
 package com.acmeplex.movieticketreservation.Service;
 
 import com.acmeplex.movieticketreservation.Model.RegisteredUser;
+import com.acmeplex.movieticketreservation.Model.User;
 import com.acmeplex.movieticketreservation.Repository.RegisteredUserRepository;
+import com.acmeplex.movieticketreservation.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,9 @@ public class UserService {
 
     @Autowired
     private RegisteredUserRepository registeredUserRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public void registerUser(RegisteredUser user) {
         //checking if email already exists
@@ -57,5 +62,9 @@ public class UserService {
             return registeredUserRepository.save(existingUser);
         }
         return null; // User not found
+    }
+    public User findUserById(int userID) {
+        return userRepository.findById(userID)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userID));
     }
 }

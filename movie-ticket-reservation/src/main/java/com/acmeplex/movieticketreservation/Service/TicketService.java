@@ -1,104 +1,95 @@
-//package com.acmeplex.movieticketreservation.Service;
-//
-//import com.acmeplex.movieticketreservation.Model.*;
-//import com.acmeplex.movieticketreservation.Repository.*;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.stereotype.Service;
-//import org.springframework.transaction.annotation.Transactional;
-//
-//import java.util.Map;
-//import java.util.Optional;
-//
-//@Service
-//public class TicketService {
-//
-//    @Autowired
-//    private TicketRepository ticketRepository;
-//
-//    @Autowired
-//    private UserRepository userRepository;
-//
-//    @Autowired
-//    private ShowtimeRepository showtimeRepository;
-//
-//    @Autowired
-//    private SeatRepository seatRepository;
-//
-//    @Autowired
-//    private SeatService seatService;
-//
-//    @Autowired
-//    private PaymentRepository paymentRepository;
-//
-//    @Transactional
-//    public ResponseEntity<?> createTicket(int showtimeID, int seatNumber, int theatreID, int userID, String date, String ticketStatus, int paymentID) {
-//        try {
-//            Optional<User> userOptional = userRepository.findById(userID);
-//            Optional<Showtime> showtimeOptional = showtimeRepository.findById(showtimeID);
-//            Optional<Payment> paymentOptional = paymentRepository.findById(paymentID);
-//            if (userOptional.isEmpty()) {
-//                throw new IllegalArgumentException("User with ID " + userID + " does not exist.");
-//            }
-//            if (paymentOptional.isEmpty()) {
-//                throw new IllegalArgumentException("Payment with ID " + paymentID + " does not exist.");
-//            }
-//            if (showtimeOptional.isEmpty()) {
-//                throw new IllegalArgumentException("Showtime with ID " + showtimeID + " does not exist.");
-//            }
-//            Optional<Seat> seatOptional = Optional.ofNullable(seatService.findSeatByShowtime(showtimeOptional.get(), seatNumber));
-//            if (seatOptional.isEmpty()) {
-//                throw new IllegalArgumentException("Seat with Number " + seatNumber + " does not exist in Showtime with ID" + showtimeID);
-//            }
-//            Seat seat = seatOptional.get();
-//            if (seat.getStatus().equals("Reserved")) {
-//                throw new IllegalArgumentException("Seat with Number " + seatNumber + "in Showtime with ID " + showtimeID + " is already reserved!");
-//            }
-//            Payment payment = paymentOptional.get();
-//            seat.setStatus("Reserved");
-//            seatRepository.save(seat);
-//            User user = userOptional.get();
-//            Ticket ticket = new Ticket(seatNumber, showtimeOptional.get(), date, ticketStatus, user, payment);
-//            Ticket savedTicket = ticketRepository.save(ticket);
-//            user.getTicketHistory().add(savedTicket);
-//            userRepository.save(user);
-//            return ResponseEntity.ok(Map.of(
-//                    "ticketID", savedTicket.getTicketID(),
-//                    "status", "success"
-//            ));
-//        } catch (IllegalArgumentException ex) {
-//            return ResponseEntity.badRequest().body(Map.of(
-//                    "error", ex.getMessage(),
-//                    "status", "failed"
-//            ));
-//        } catch (Exception ex) {
-//            return ResponseEntity.status(500).body(Map.of(
-//                    "error", "An unexpected error occurred: " + ex.getMessage(),
-//                    "status", "failed"
-//            ));
-//        }
-//    }
-//
-//    @Transactional
-//    public double cancelTicket(int ticketID) {
-//        Optional<Ticket> ticketOptional = ticketRepository.findById(ticketID);
-//        if (ticketOptional.isEmpty()) {
-//            throw new IllegalArgumentException("Ticket with ID " + ticketID + " does not exist.");
-//        }
-//        Ticket ticket = ticketOptional.get();
-//        User user = ticket.getUser();
-//        Seat ticketSeat = seatService.findSeatByShowtime(ticket.getShowtime(), ticket.getSeatNumber());
-//        if (ticketSeat == null) {
-//            throw new IllegalArgumentException("Seat not found!");
-//        }
-//        ticketSeat.setStatus("Available");
-//        seatRepository.save(ticketSeat);
-//        ticket.setStatus("Cancelled");
-//        ticketRepository.save(ticket);
-//        return calculateRefund(user);
-//    }
-//
-//    private double calculateRefund(User user) {
-//        return user.getUserType().equals("Registered") ? Ticket.TICKET_PRICE : Ticket.TICKET_PRICE * 0.85;
-//    }
-//}
+package com.acmeplex.movieticketreservation.Service;
+
+import com.acmeplex.movieticketreservation.Model.*;
+import com.acmeplex.movieticketreservation.Repository.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+@Service
+public class TicketService {
+
+    @Autowired
+    private TicketRepository ticketRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private ShowtimeRepository showtimeRepository;
+
+    @Autowired
+    private SeatRepository seatRepository;
+
+    @Autowired
+    private SeatService seatService;
+
+    @Autowired
+    private PaymentRepository paymentRepository;
+
+
+    @Transactional
+    public double cancelTicket(int ticketID) {
+        Optional<Ticket> ticketOptional = ticketRepository.findById(ticketID);
+        if (ticketOptional.isEmpty()) {
+            throw new IllegalArgumentException("Ticket with ID " + ticketID + " does not exist.");
+        }
+        Ticket ticket = ticketOptional.get();
+        User user = ticket.getUser();
+        Seat ticketSeat = seatService.findSeatByShowtime(ticket.getShowtime(), ticket.getSeatNumber());
+        if (ticketSeat == null) {
+            throw new IllegalArgumentException("Seat not found!");
+        }
+        ticketSeat.setStatus("Available");
+        seatRepository.save(ticketSeat);
+        ticket.setStatus("Cancelled");
+        ticketRepository.save(ticket);
+        return calculateRefund(user);
+    }
+
+    private double calculateRefund(User user) {
+        return user.getUserType().equals("Registered") ? Ticket.TICKET_PRICE : Ticket.TICKET_PRICE * 0.85;
+    }
+
+    @Transactional
+    public Map<String, Object> createTicket(int showtimeID, int seatNumber, int theatreID, int userID, int paymentID, String date, String ticketStatus) {
+        if (isPaid(paymentID)) {
+            throw new RuntimeException("This ticket is already paid!");
+        }
+        User user = userRepository.findById(userID)
+                .orElseThrow(() -> new RuntimeException("User not found for ID: " + userID));
+
+        Payment payment = paymentRepository.findById(paymentID)
+                .orElseThrow(() -> new RuntimeException("Payment not found for ID: " + paymentID));
+
+        Showtime showtime = showtimeRepository.findById(showtimeID)
+                .orElseThrow(() -> new RuntimeException("showtime not found for ID: " + showtimeID));
+
+        Ticket ticket = new Ticket(seatNumber, showtime, date, ticketStatus, user, payment);
+        ticketRepository.save(ticket);
+        user.getTicketHistory().add(ticket);
+        userRepository.save(user);
+        Map<String, Object> response = new HashMap<>();
+        response.put("ticketID", ticket.getTicketID());
+        response.put("status", "success");
+        return response;
+    }
+
+    private boolean isPaid(int paymentID) {
+        Optional<Ticket> ticketOptional = ticketRepository.findByPayment_PaymentID(paymentID);
+        if (ticketOptional.isPresent()) {
+            Ticket ticket = ticketOptional.get();
+            if (ticket.getStatus().equals("booked")) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+}

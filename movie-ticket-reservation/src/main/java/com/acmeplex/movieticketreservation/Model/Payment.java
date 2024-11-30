@@ -1,9 +1,6 @@
 package com.acmeplex.movieticketreservation.Model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,6 +18,10 @@ public class Payment {
     private long cardNumber;
     private int ccv;
     private String expiry;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "userID", nullable = false)
+    private User user;
 
     public Payment(String paymentType, double amount, String cardOwner, long cardNumber, int ccv, String expiry) {
         this.paymentType = paymentType;

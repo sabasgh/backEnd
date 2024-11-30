@@ -63,7 +63,7 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found!");
             }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving user profile.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving user profile."+ e.getMessage());
         }
     }
 

@@ -1,11 +1,16 @@
 package com.acmeplex.movieticketreservation.Service;
+
 import com.acmeplex.movieticketreservation.Model.Payment;
+import com.acmeplex.movieticketreservation.Model.User;
 import com.acmeplex.movieticketreservation.Repository.PaymentRepository;
-import com.acmeplex.movieticketreservation.Repository.TicketRepository;
 import com.acmeplex.movieticketreservation.patterns.PaymentContext;
+import com.acmeplex.movieticketreservation.patterns.PaymentStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class PaymentService {
@@ -14,24 +19,29 @@ public class PaymentService {
     private PaymentRepository paymentRepository;
 
     @Autowired
-    private PaymentContext paymentContext;
+    private UserService userService;
 
     @Autowired
-    private TicketRepository ticketRepository;
+    private PaymentContext paymentContext;
 
+    @Transactional
+    public Map<String, Object> processPayment(int userID, String paymentType, double amount, String cardOwner, long cardNumber, int ccv, String expiry) {
 
-    public boolean processPayment(Payment payment) {
-        // Simulate payment validation logic
-        if (validatePayment(payment)) {
-            paymentRepository.save(payment); // Save the payment record
-            return true;
+        User user = userService.findUserById(userID);
+        try {
+            paymentContext.setPaymentStrategy(paymentType);
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Invalid payment type: " + paymentType);
         }
-        return false;
-    }
-
-    private boolean validatePayment(Payment payment) {
-        return payment.getCardNumber() > 0 &&
-                payment.getCcv() > 0 &&
-                payment.getAmount() > 0;
+        boolean paymentSuccess = paymentContext.executePayment(amount);
+        Payment payment = new Payment(paymentType, amount, cardOwner, cardNumber, ccv, expiry);
+        payment.setUser(user);
+        if (paymentSuccess) {
+            paymentRepository.save(payment);
+        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("paymentID", paymentSuccess ? payment.getPaymentID() : null);
+        response.put("status", paymentSuccess ? "success" : "failed");
+        return response;
     }
 }

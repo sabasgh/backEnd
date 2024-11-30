@@ -8,10 +8,10 @@ public class PaymentContext {
 
     public void setPaymentStrategy(String paymentType) {
         switch (paymentType.toLowerCase()) {
-            case "creditcard":
+            case "credit":
                 this.paymentStrategy = new CreditCardPayment();
                 break;
-            case "debitcard":
+            case "debit":
                 this.paymentStrategy = new DebitCardPayment();
                 break;
             default:
@@ -19,11 +19,11 @@ public class PaymentContext {
         }
     }
 
-    public String executePayment(double amount) {
+    public Boolean executePayment(double amount) {
         if (paymentStrategy == null) {
             throw new IllegalStateException("Payment strategy not set!");
         }
         paymentStrategy.pay(amount);
-        return "success";
+        return true;
     }
 }

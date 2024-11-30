@@ -21,10 +21,13 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Ticket> ticketHistory;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Payment> paymentHistory;
+
     public User() {
     }
 
-    public void register(){
+    public void register() {
         System.out.println("user registered via Email!!!");
     }
 }

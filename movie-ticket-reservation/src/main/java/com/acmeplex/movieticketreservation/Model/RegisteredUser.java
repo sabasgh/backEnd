@@ -18,7 +18,6 @@ public class RegisteredUser extends User{
     private String address;
     private String password;
 
-    //private List<Payment> paymentHistory;
 
 
     public RegisteredUser() {
