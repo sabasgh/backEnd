@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -18,13 +19,15 @@ public class Movie {
     private int rate;
     private String duration;
     private String url;
+    private LocalDate releaseDate;
 
-    public Movie(String movieTitle, String movieGenre, int rate, String duration, String url) {
+    public Movie(String movieTitle, String movieGenre, int rate, String duration, String url, LocalDate releaseDate) {
         this.movieTitle = movieTitle;
         this.movieGenre = movieGenre;
         this.rate = rate;
         this.duration = duration;
         this.url = url;
+        this.releaseDate = releaseDate;
     }
 
     public Movie() {

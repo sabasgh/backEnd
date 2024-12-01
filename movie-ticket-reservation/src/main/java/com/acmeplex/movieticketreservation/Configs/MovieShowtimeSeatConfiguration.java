@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,13 +21,18 @@ public class MovieShowtimeSeatConfiguration {
     @Order(1)
     CommandLineRunner loadData(MovieRepository movieRepository, ShowtimeRepository showtimeRepository) {
         return args -> {
-            // Add updated movies
-            Movie movie1 = new Movie("Venom: The Last Dance", "Science Fiction, Action, Adventure", 6, "1h 49m", "https://image.tmdb.org/t/p/w1280/aosm8NMQ3UyoBVpSxyimorCQykC.jpg");
-            Movie movie2 = new Movie("Smile 2", "Horror, Mystery", 6, "2h 7m", "https://www.themoviedb.org/t/p/w1280/ht8Uv9QPv9y7K0RvUyJIaXOZTfd.jpg");
-            Movie movie3 = new Movie("The Wild Robot", "Animation, Science Fiction, Family", 8, "1h 42m", "https://image.tmdb.org/t/p/w1280/wTnV3PCVW5O92JMrFvvrRcV39RU.jpg");
-            Movie movie4 = new Movie("Gladiator II", "Action, Adventure", 7, "2h 28m", "https://image.tmdb.org/t/p/w1280/2cxhvwyEwRlysAmRH4iodkvo0z5.jpg");
-            Movie movie5 = new Movie("Wicked", "Drama, Fantasy, Romance", 8, "2h 41m", "https://image.tmdb.org/t/p/w1280/c5Tqxeo1UpBvnAc3csUm7j3hlQl.jpg");
-            Movie movie6 = new Movie("Deadpool & Wolverine", "Action, Comedy, Science Fiction", 8, "2h 8m", "https://image.tmdb.org/t/p/w1280/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg");
+            // Add updated movies with release dates
+            Movie movie1 = new Movie("Venom: The Last Dance", "Science Fiction, Action, Adventure", 6, "1h 49m", "https://image.tmdb.org/t/p/w1280/aosm8NMQ3UyoBVpSxyimorCQykC.jpg", LocalDate.of(2024, 11, 1));
+            Movie movie2 = new Movie("Smile 2", "Horror, Mystery", 6, "2h 7m", "https://www.themoviedb.org/t/p/w1280/ht8Uv9QPv9y7K0RvUyJIaXOZTfd.jpg", LocalDate.of(2024, 10, 15));
+            Movie movie3 = new Movie("The Wild Robot", "Animation, Science Fiction, Family", 8, "1h 42m", "https://image.tmdb.org/t/p/w1280/wTnV3PCVW5O92JMrFvvrRcV39RU.jpg", LocalDate.of(2024, 10, 25));
+            Movie movie4 = new Movie("Gladiator II", "Action, Adventure", 7, "2h 28m", "https://image.tmdb.org/t/p/w1280/2cxhvwyEwRlysAmRH4iodkvo0z5.jpg", LocalDate.of(2024, 12, 1));
+            Movie movie5 = new Movie("Wicked", "Drama, Fantasy, Romance", 8, "2h 41m", "https://image.tmdb.org/t/p/w1280/c5Tqxeo1UpBvnAc3csUm7j3hlQl.jpg", LocalDate.of(2024, 11, 20));
+            Movie movie6 = new Movie("Deadpool & Wolverine", "Action, Comedy, Science Fiction", 8, "2h 8m", "https://image.tmdb.org/t/p/w1280/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg", LocalDate.of(2024, 12, 15));
+
+            // Add past movies
+            Movie movie7 = new Movie("The Godfather", "Drama, Crime", 9, "2h 55m", "https://image.tmdb.org/t/p/w1280/oaIPuKuJM8IdpgWSmNe9bBiyvRY.jpg", LocalDate.of(1972, 3, 24));
+            Movie movie8 = new Movie("Parasite", "Comedy, Thriller, Drama", 9, "2h 13m", "https://image.tmdb.org/t/p/w1280/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg", LocalDate.of(2019, 5, 30));
+            Movie movie9 = new Movie("Forrest Gump", "Comedy, Drama, Romance", 8, "2h 22m", "https://image.tmdb.org/t/p/w1280/13-forrest-gump?language=en-CA", LocalDate.of(1994, 7, 6));
 
             // Save movies first so their IDs are available
             movieRepository.save(movie1);
@@ -35,18 +41,21 @@ public class MovieShowtimeSeatConfiguration {
             movieRepository.save(movie4);
             movieRepository.save(movie5);
             movieRepository.save(movie6);
+            movieRepository.save(movie7);
+            movieRepository.save(movie8);
+            movieRepository.save(movie9);
 
             // Add showtimes for each movie with multiple days
             List<Showtime> showtimes = new ArrayList<>();
 
             // Add showtimes for 2024-11-30
-            showtimes.addAll(createDailyShowtimes("2024-11-30", movie1.getMovieID(), movie2.getMovieID(), movie3.getMovieID(), movie4.getMovieID(), movie5.getMovieID(), movie6.getMovieID()));
+            showtimes.addAll(createDailyShowtimes("2024-11-30", movie1.getMovieID(), movie2.getMovieID(), movie3.getMovieID(), movie4.getMovieID(), movie5.getMovieID(), movie6.getMovieID(), movie7.getMovieID(), movie8.getMovieID(), movie9.getMovieID()));
 
             // Add showtimes for 2024-12-01
-            showtimes.addAll(createDailyShowtimes("2024-12-01", movie1.getMovieID(), movie2.getMovieID(), movie3.getMovieID(), movie4.getMovieID(), movie5.getMovieID(), movie6.getMovieID()));
+            showtimes.addAll(createDailyShowtimes("2024-12-01", movie1.getMovieID(), movie2.getMovieID(), movie3.getMovieID(), movie4.getMovieID(), movie5.getMovieID(), movie6.getMovieID(), movie7.getMovieID(), movie8.getMovieID(), movie9.getMovieID()));
 
             // Add showtimes for 2024-12-02
-            showtimes.addAll(createDailyShowtimes("2024-12-02", movie1.getMovieID(), movie2.getMovieID(), movie3.getMovieID(), movie4.getMovieID(), movie5.getMovieID(), movie6.getMovieID()));
+            showtimes.addAll(createDailyShowtimes("2024-12-02", movie1.getMovieID(), movie2.getMovieID(), movie3.getMovieID(), movie4.getMovieID(), movie5.getMovieID(), movie6.getMovieID(), movie7.getMovieID(), movie8.getMovieID(), movie9.getMovieID()));
 
             // Save all showtimes
             showtimeRepository.saveAll(showtimes);

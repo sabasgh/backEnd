@@ -68,6 +68,16 @@ public class TicketService {
 
         Showtime showtime = showtimeRepository.findById(showtimeID)
                 .orElseThrow(() -> new RuntimeException("showtime not found for ID: " + showtimeID));
+        Seat seat = seatService.findSeatByShowtime(showtime, seatNumber);
+        if (seat == null) {
+            throw new RuntimeException("Seat not found for seat number: " + seatNumber);
+        }
+        if ("reserved".equalsIgnoreCase(seat.getStatus())) {
+            throw new RuntimeException("Seat number " + seatNumber + " is already reserved!");
+        }
+
+        seat.setStatus("reserved");
+        seatRepository.save(seat);
 
         Ticket ticket = new Ticket(seatNumber, showtime, date, ticketStatus, user, payment);
         ticketRepository.save(ticket);
