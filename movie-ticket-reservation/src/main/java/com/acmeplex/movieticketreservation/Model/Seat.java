@@ -12,16 +12,14 @@ public class Seat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int seatID;
     private int seatNumber;
-    private String seatRow;
     private String status;
 
     @ManyToOne
     @JoinColumn(name = "showtimeID")
     private Showtime showtime;
 
-    public Seat(int seatNumber, String seatRow, String status, Showtime showtime) {
+    public Seat(int seatNumber,String status, Showtime showtime) {
         this.seatNumber = seatNumber;
-        this.seatRow = seatRow;
         this.status = status;
         this.showtime = showtime;
     }

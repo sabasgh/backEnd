@@ -76,6 +76,7 @@ public class TicketService {
         Map<String, Object> response = new HashMap<>();
         response.put("ticketID", ticket.getTicketID());
         response.put("status", "success");
+        response.put("showtimeID",ticket.getShowtime().getShowtimeID());
         return response;
     }
 

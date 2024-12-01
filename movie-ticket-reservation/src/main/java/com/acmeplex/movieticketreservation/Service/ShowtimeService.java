@@ -23,7 +23,6 @@ public class ShowtimeService {
         List<Map<String, Object>> seatsList = new ArrayList<>();
         for (Seat seat : showtime.getSeats()) {
             Map<String, Object> map = new HashMap<>();
-            map.put("row", seat.getSeatRow());
             map.put("seatNumber", seat.getSeatNumber());
             map.put("status", seat.getStatus());
             seatsList.add(map);

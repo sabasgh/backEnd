@@ -49,7 +49,6 @@ public class MovieService {
                                 Map<String, Object> seatMap = new HashMap<>();
                                 seatMap.put("seatID", seat.getSeatID());
                                 seatMap.put("seatNumber", seat.getSeatNumber());
-                                seatMap.put("seatRow", seat.getSeatRow());
                                 seatMap.put("status", seat.getStatus());
                                 return seatMap;
                             })
