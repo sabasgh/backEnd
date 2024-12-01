@@ -32,13 +32,23 @@ public class TicketController {
         }
     }
 
-    @GetMapping("/{ticketID}")
+    @GetMapping("/cancel/{ticketID}")
     ResponseEntity<?> cancelTicket(@PathVariable int ticketID) {
         try {
             double refundAmount = ticketService.cancelTicket(ticketID);
             return ResponseEntity.ok(Map.of("refundAmount", refundAmount));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error in ticket cancelation: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/{ticketID}")
+    ResponseEntity<?> getTicketDetails(@PathVariable int ticketID) {
+        try {
+            Map<String, Object> ticketInfo = ticketService.getTicketDetails(ticketID);
+            return ResponseEntity.ok(ticketInfo);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error: " + e.getMessage());
         }
     }
 }

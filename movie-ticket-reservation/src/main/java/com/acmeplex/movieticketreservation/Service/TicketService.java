@@ -76,7 +76,7 @@ public class TicketService {
         Map<String, Object> response = new HashMap<>();
         response.put("ticketID", ticket.getTicketID());
         response.put("status", "success");
-        response.put("showtimeID",ticket.getShowtime().getShowtimeID());
+        response.put("showtimeID", ticket.getShowtime().getShowtimeID());
         return response;
     }
 
@@ -92,5 +92,24 @@ public class TicketService {
         } else {
             return false;
         }
+    }
+
+    public Map<String, Object> getTicketDetails(int ticketID) {
+        Optional<Ticket> ticketOptional = ticketRepository.findById(ticketID);
+        if (ticketOptional.isEmpty()) {
+            throw new RuntimeException("Ticket with ID: " + ticketID + " does not exist!");
+        }
+        Ticket ticket = ticketOptional.get();
+        Map<String, Object> ticketMap = new HashMap<>();
+        ticketMap.put("ticketID", ticket.getTicketID());
+        ticketMap.put("date", ticket.getDate());
+        ticketMap.put("status", ticket.getStatus());
+        ticketMap.put("seatNumber", ticket.getSeatNumber());
+        ticketMap.put("showtimeID", ticket.getShowtime().getShowtimeID());
+        ticketMap.put("theatreID", ticket.getShowtime().getTheatreID());
+        ticketMap.put("movieID", ticket.getShowtime().getMovieID());
+        ticketMap.put("userID", ticket.getUser().getUserID());
+        ticketMap.put("paymentID", ticket.getPayment().getPaymentID());
+        return ticketMap;
     }
 }
