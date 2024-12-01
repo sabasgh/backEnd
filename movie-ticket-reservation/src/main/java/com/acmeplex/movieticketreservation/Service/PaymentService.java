@@ -3,6 +3,7 @@ package com.acmeplex.movieticketreservation.Service;
 import com.acmeplex.movieticketreservation.Model.Payment;
 import com.acmeplex.movieticketreservation.Model.User;
 import com.acmeplex.movieticketreservation.Repository.PaymentRepository;
+import com.acmeplex.movieticketreservation.Repository.UserRepository;
 import com.acmeplex.movieticketreservation.patterns.PaymentContext;
 import com.acmeplex.movieticketreservation.patterns.PaymentStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +25,11 @@ public class PaymentService {
     @Autowired
     private PaymentContext paymentContext;
 
-    @Transactional
-    public Map<String, Object> processPayment(int userID, String paymentType, double amount, String cardOwner, long cardNumber, int ccv, String expiry) {
 
-        User user = userService.findUserById(userID);
+    @Transactional
+    public Map<String, Object> processPayment(String email, String paymentType, double amount, String cardOwner, long cardNumber, int ccv, String expiry) {
+
+        User user = userService.findOrCreateUserByEmail(email);
         try {
             paymentContext.setPaymentStrategy(paymentType);
         } catch (IllegalArgumentException e) {
@@ -42,6 +44,9 @@ public class PaymentService {
         Map<String, Object> response = new HashMap<>();
         response.put("paymentID", paymentSuccess ? payment.getPaymentID() : null);
         response.put("status", paymentSuccess ? "success" : "failed");
+        response.put("user", user.getUserID());
         return response;
     }
+
+
 }

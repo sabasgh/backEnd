@@ -101,7 +101,16 @@ public class UserService {
         }
         return null;
     }
-
+    public User findOrCreateUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseGet(() -> {
+                    // Create a new guest user if not found
+                    User newUser = new User();
+                    newUser.setEmail(email);
+                    newUser.setUserType("Guest");
+                    return userRepository.save(newUser);
+                });
+    }
     public User findUserById(int userID) {
         return userRepository.findById(userID).orElseThrow(() -> new RuntimeException("User not found with ID: " + userID));
     }
