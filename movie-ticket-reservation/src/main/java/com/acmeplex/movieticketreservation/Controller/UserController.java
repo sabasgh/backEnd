@@ -56,14 +56,10 @@ public class UserController {
     @GetMapping("/{userID}")
     public ResponseEntity<?> getUserProfile(@PathVariable int userID) {
         try {
-            RegisteredUser user = userService.getUserProfile(userID);
-            if (user != null) {
-                return ResponseEntity.ok(user);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found!");
-            }
+            Map<String, Object> response = userService.getUserProfile(userID);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving user profile."+ e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error fetching user profile: " + e.getMessage());
         }
     }
 
