@@ -1,9 +1,6 @@
 package com.acmeplex.movieticketreservation.Model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,8 +14,13 @@ public class Notification {
 
     private String message;
 
-    public Notification(String message) {
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "userID", nullable = false)
+    private User user;
+
+    public Notification(String message, User user) {
         this.message = message;
+        this.user = user;
     }
 
     public Notification() {

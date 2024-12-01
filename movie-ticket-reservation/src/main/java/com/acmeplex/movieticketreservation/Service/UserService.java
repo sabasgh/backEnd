@@ -23,7 +23,6 @@ public class UserService {
     private UserRepository userRepository;
 
     public void registerUser(RegisteredUser user) {
-        //checking if email already exists
         if (registeredUserRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new RuntimeException("Email already in use!");
         }
@@ -60,7 +59,6 @@ public class UserService {
             return ticketMap;
         }).collect(Collectors.toList());
 
-        // Build payment history
         List<Map<String, Object>> paymentHistoryList = user.getPaymentHistory().stream().map(payment -> {
             Map<String, Object> paymentMap = new HashMap<>();
             paymentMap.put("paymentID", payment.getPaymentID());
@@ -72,7 +70,12 @@ public class UserService {
             return paymentMap;
         }).collect(Collectors.toList());
 
-        // Build the final response
+        List<Map<String, Object>> notificationHistoryList = user.getNotifications().stream().map(notification -> {
+            Map<String, Object> notificationMap = new HashMap<>();
+            notificationMap.put("message", notification.getMessage());
+            return notificationMap;
+        }).collect(Collectors.toList());
+
         Map<String, Object> response = new HashMap<>();
         response.put("userID", user.getUserID());
         response.put("name", user.getName());
@@ -80,6 +83,7 @@ public class UserService {
         response.put("address", user.getAddress());
         response.put("ticketHistory", ticketHistoryList);
         response.put("paymentHistory", paymentHistoryList);
+        response.put("notificationHistory", notificationHistoryList);
 
         return response;
     }
@@ -88,16 +92,14 @@ public class UserService {
         Optional<RegisteredUser> optionalUser = registeredUserRepository.findById(userID);
         if (optionalUser.isPresent()) {
             RegisteredUser existingUser = optionalUser.get();
-            // Update fields
             existingUser.setName(updatedUser.getName());
             existingUser.setEmail(updatedUser.getEmail());
             existingUser.setAddress(updatedUser.getAddress());
             existingUser.setMembershipFee(updatedUser.getMembershipFee());
             existingUser.setTicketHistory(updatedUser.getTicketHistory());
-            // Save updated user
             return registeredUserRepository.save(existingUser);
         }
-        return null; // User not found
+        return null;
     }
 
     public User findUserById(int userID) {
