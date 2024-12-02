@@ -81,7 +81,7 @@ public class UserService {
             return notificationMap;
         }).collect(Collectors.toList());
 
-        userProfile.put("notifications", notifications);
+        userProfile.put("notificationHistory", notifications);
         return userProfile;
     }
 
