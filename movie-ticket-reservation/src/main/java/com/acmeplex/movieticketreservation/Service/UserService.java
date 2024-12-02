@@ -1,5 +1,6 @@
 package com.acmeplex.movieticketreservation.Service;
 
+import com.acmeplex.movieticketreservation.Model.PaymentInfo;
 import com.acmeplex.movieticketreservation.Model.RegisteredUser;
 import com.acmeplex.movieticketreservation.Model.User;
 import com.acmeplex.movieticketreservation.Repository.RegisteredUserRepository;
@@ -46,61 +47,60 @@ public class UserService {
     }
 
     public Map<String, Object> getUserProfile(int userID) {
-        RegisteredUser user = registeredUserRepository.findById(userID).orElseThrow(() -> new RuntimeException("User not found for ID: " + userID));
+        RegisteredUser user = registeredUserRepository.findById(userID)
+                .orElseThrow(() -> new RuntimeException("User not found for ID: " + userID));
 
-        List<Map<String, Object>> ticketHistoryList = user.getTicketHistory().stream().map(ticket -> {
-            Map<String, Object> ticketMap = new HashMap<>();
-            ticketMap.put("ticketID", ticket.getTicketID());
-            ticketMap.put("showtimeID", ticket.getShowtime().getShowtimeID());
-            ticketMap.put("seatNumber", ticket.getSeatNumber());
-            ticketMap.put("theatreID", ticket.getShowtime().getTheatreID());
-            ticketMap.put("date", ticket.getDate());
-            ticketMap.put("status", ticket.getStatus());
-            return ticketMap;
-        }).collect(Collectors.toList());
+        Map<String, Object> userProfile = new HashMap<>();
+        userProfile.put("userID", user.getUserID());
+        userProfile.put("name", user.getName());
+        userProfile.put("email", user.getEmail());
+        userProfile.put("address", user.getAddress());
+        userProfile.put("creditPoints", user.getCreditPoints());
+        List<Map<String, Object>> paymentMethods = user.getPaymentMethods()
+                .stream()
+                .map(method -> {
+                    Map<String, Object> methodMap = new HashMap<>();
+                    methodMap.put("cardOwner", method.getCardOwner());
+                    methodMap.put("cardNum", method.getCardNum());
+                    methodMap.put("ccv", method.getCcv());
+                    methodMap.put("expiry", method.getExpiry());
+                    methodMap.put("paymentType", method.getPaymentType());
+                    return methodMap;
+                })
+                .collect(Collectors.toList());
 
-        List<Map<String, Object>> paymentHistoryList = user.getPaymentHistory().stream().map(payment -> {
-            Map<String, Object> paymentMap = new HashMap<>();
-            paymentMap.put("paymentID", payment.getPaymentID());
-            paymentMap.put("amount", payment.getAmount());
-            paymentMap.put("paymentType", payment.getPaymentType());
-            paymentMap.put("cardOwner", payment.getCardOwner());
-            paymentMap.put("cardNumber", payment.getCardNumber());
-            paymentMap.put("expiry", payment.getExpiry());
-            return paymentMap;
-        }).collect(Collectors.toList());
-
-        List<Map<String, Object>> notificationHistoryList = user.getNotifications().stream().map(notification -> {
-            Map<String, Object> notificationMap = new HashMap<>();
-            notificationMap.put("message", notification.getMessage());
-            return notificationMap;
-        }).collect(Collectors.toList());
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("userID", user.getUserID());
-        response.put("name", user.getName());
-        response.put("email", user.getEmail());
-        response.put("address", user.getAddress());
-        response.put("ticketHistory", ticketHistoryList);
-        response.put("paymentHistory", paymentHistoryList);
-        response.put("notificationHistory", notificationHistoryList);
-
-        return response;
+        userProfile.put("paymentMethods", paymentMethods);
+        return userProfile;
     }
 
-    public RegisteredUser updateUserProfile(int userID, RegisteredUser updatedUser) {
-        Optional<RegisteredUser> optionalUser = registeredUserRepository.findById(userID);
-        if (optionalUser.isPresent()) {
-            RegisteredUser existingUser = optionalUser.get();
-            existingUser.setName(updatedUser.getName());
-            existingUser.setEmail(updatedUser.getEmail());
-            existingUser.setAddress(updatedUser.getAddress());
-            existingUser.setMembershipFee(updatedUser.getMembershipFee());
-            existingUser.setTicketHistory(updatedUser.getTicketHistory());
-            return registeredUserRepository.save(existingUser);
+
+        public RegisteredUser updateUserProfile(int userID, Map<String, Object> userDetails) {
+            RegisteredUser user = registeredUserRepository.findById(userID)
+                    .orElseThrow(() -> new RuntimeException("User not found for ID: " + userID));
+
+            user.setName((String) userDetails.get("name"));
+            user.setEmail((String) userDetails.get("email"));
+            user.setAddress((String) userDetails.get("address"));
+            user.setCreditPoints((Integer) userDetails.get("creditPoints"));
+
+            List<Map<String, Object>> paymentMethods = (List<Map<String, Object>>) userDetails.get("paymentMethods");
+            if (paymentMethods != null) {
+                List<PaymentInfo> newPaymentMethods = paymentMethods.stream().map(method -> {
+                    PaymentInfo paymentInfo = new PaymentInfo();
+                    paymentInfo.setCardOwner((String) method.get("cardOwner"));
+                    paymentInfo.setCardNum(Long.parseLong(method.get("cardNum").toString()));
+                    paymentInfo.setCcv((Integer) method.get("ccv"));
+                    paymentInfo.setExpiry((String) method.get("expiry"));
+                    paymentInfo.setPaymentType((String) method.get("paymentType"));
+                    paymentInfo.setRegisteredUser(user);
+                    return paymentInfo;
+                }).toList();
+                user.getPaymentMethods().clear(); // Clear existing payment methods
+                user.getPaymentMethods().addAll(newPaymentMethods);
+            }
+            return userRepository.save(user);
         }
-        return null;
-    }
+
     public User findOrCreateUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseGet(() -> {
@@ -111,6 +111,7 @@ public class UserService {
                     return userRepository.save(newUser);
                 });
     }
+
     public User findUserById(int userID) {
         return userRepository.findById(userID).orElseThrow(() -> new RuntimeException("User not found with ID: " + userID));
     }

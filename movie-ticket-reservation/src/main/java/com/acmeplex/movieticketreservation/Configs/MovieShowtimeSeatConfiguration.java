@@ -32,7 +32,7 @@ public class MovieShowtimeSeatConfiguration {
             // Add past movies
             Movie movie7 = new Movie("The Godfather", "Drama, Crime", 9, "2h 55m", "https://image.tmdb.org/t/p/w1280/oaIPuKuJM8IdpgWSmNe9bBiyvRY.jpg", LocalDate.of(1972, 3, 24));
             Movie movie8 = new Movie("Parasite", "Comedy, Thriller, Drama", 9, "2h 13m", "https://image.tmdb.org/t/p/w1280/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg", LocalDate.of(2019, 5, 30));
-            Movie movie9 = new Movie("Forrest Gump", "Comedy, Drama, Romance", 8, "2h 22m", "https://image.tmdb.org/t/p/w1280/13-forrest-gump?language=en-CA", LocalDate.of(1994, 7, 6));
+            Movie movie9 = new Movie("Forrest Gump", "Comedy, Drama, Romance", 8, "2h 22m", "https://image.tmdb.org/t/p/w1280/arw2vcBveWOVZr6pxd9XTd1TdQa.jpg", LocalDate.of(1994, 7, 6));
 
             // Save movies first so their IDs are available
             movieRepository.save(movie1);

@@ -18,6 +18,9 @@ public class RegisteredUser extends User{
     private String address;
     private String password;
 
+    @OneToMany(mappedBy = "registeredUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PaymentInfo> paymentMethods;
+
 
 
     public RegisteredUser() {

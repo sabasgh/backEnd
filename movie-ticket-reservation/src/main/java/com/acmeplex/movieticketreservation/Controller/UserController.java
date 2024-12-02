@@ -1,6 +1,7 @@
 package com.acmeplex.movieticketreservation.Controller;
 
 import com.acmeplex.movieticketreservation.Model.RegisteredUser;
+import com.acmeplex.movieticketreservation.Model.User;
 import com.acmeplex.movieticketreservation.Service.UserService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -64,18 +65,12 @@ public class UserController {
     }
 
     @PutMapping("/{userID}")
-    public ResponseEntity<?> updateUserProfile(@PathVariable int userID, @RequestBody RegisteredUser updatedUser) {
+    public ResponseEntity<?> updateUserProfile(@PathVariable int userID, @RequestBody Map<String, Object> userDetails) {
         try {
-            RegisteredUser user = userService.updateUserProfile(userID, updatedUser);
-            if (user != null) {
-                return ResponseEntity.ok("User profile updated successfully.");
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
-            }
+           RegisteredUser updatedUser = userService.updateUserProfile(userID, userDetails);
+            return ResponseEntity.ok(Map.of("status", "success"));
         } catch (Exception e) {
-            e.printStackTrace(); // Logs the actual exception for debugging
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error updating user profile: " + e.getMessage());
+            return ResponseEntity.status(400).body("Error: " + e.getMessage());
         }
     }
 }
