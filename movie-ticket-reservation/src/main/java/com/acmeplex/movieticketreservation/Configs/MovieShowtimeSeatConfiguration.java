@@ -28,76 +28,67 @@ public class MovieShowtimeSeatConfiguration {
             Movie movie4 = new Movie("Gladiator II", "Action, Adventure", 7, "2h 28m", "https://image.tmdb.org/t/p/w1280/2cxhvwyEwRlysAmRH4iodkvo0z5.jpg", LocalDate.of(2024, 12, 1));
             Movie movie5 = new Movie("Wicked", "Drama, Fantasy, Romance", 8, "2h 41m", "https://image.tmdb.org/t/p/w1280/c5Tqxeo1UpBvnAc3csUm7j3hlQl.jpg", LocalDate.of(2024, 11, 20));
             Movie movie6 = new Movie("Deadpool & Wolverine", "Action, Comedy, Science Fiction", 8, "2h 8m", "https://image.tmdb.org/t/p/w1280/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg", LocalDate.of(2024, 12, 15));
-            Movie movie7 = new Movie("The Godfather", "Drama, Crime", 9, "2h 55m", "https://image.tmdb.org/t/p/w1280/oaIPuKuJM8IdpgWSmNe9bBiyvRY.jpg", LocalDate.of(1972, 3, 24));
-            Movie movie8 = new Movie("Parasite", "Comedy, Thriller, Drama", 9, "2h 13m", "https://image.tmdb.org/t/p/w1280/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg", LocalDate.of(2019, 5, 30));
-            Movie movie9 = new Movie("Forrest Gump", "Comedy, Drama, Romance", 8, "2h 22m", "https://image.tmdb.org/t/p/w1280/arw2vcBveWOVZr6pxd9XTd1TdQa.jpg", LocalDate.of(1994, 7, 6));
+            Movie movie7 = new Movie("Alien Romulus", "Horror, Science Fiction", 7, "1h 59m", "https://image.tmdb.org/t/p/w1280/2uSWRTtCG336nuBiG8jOTEUKSy8.jpg", LocalDate.of(2024, 11, 10));
+            Movie movie8 = new Movie("Inside Out 2", "Animation", 8, "1h 37m", "https://image.tmdb.org/t/p/w1280/vpnVM9B6NMmQpWeZvzLvDESb2QY.jpg", LocalDate.of(2024, 11, 18));
+            Movie movie9 = new Movie("Bob the Builder: Bob's Big Plan", "Animation", 1, "1h 17m", "https://image.tmdb.org/t/p/w1280/xQhLDWAGbWHu1YwrSdOPLkxoMXv.jpg", LocalDate.of(2024, 10, 5));
+            Movie movie10 = new Movie("Joker: Folie à Deux", "Drama, Crime, Thriller", 5, "2h 18m", "https://image.tmdb.org/t/p/w1280/if8QiqCI7WAGImKcJCfzp6VTyKA.jpg", LocalDate.of(2024, 11, 25));
+            Movie movie11 = new Movie("Spider-Man: Across the Spider-Verse", "Animation, Action, Adventure, Science Fiction", 10, "2h 20m", "https://image.tmdb.org/t/p/w1280/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg", LocalDate.of(2024, 11, 5));
+            Movie movie12 = new Movie("Despicable Me 4", "Animation, Family, Comedy, Action", 7, "1h 34m", "https://image.tmdb.org/t/p/w1280/wWba3TaojhK7NdycRhoQpsG0FaH.jpg", LocalDate.of(2024, 11, 12));
+            Movie movie13 = new Movie("Barbie", "Comedy, Adventure", 7, "1h 54m", "https://image.tmdb.org/t/p/w1280/iuFNMS8U5cb6xfzi51Dbkovj7vM.jpg", LocalDate.of(2024, 10, 20));
+            Movie movie14 = new Movie("Inception", "Action, Science Fiction, Adventure", 8, "2h 28m", "https://image.tmdb.org/t/p/w1280/ljsZTbVsrQSqZgWeep2B1QiDKuh.jpg", LocalDate.of(2010, 7, 16));
+            Movie movie15 = new Movie("Interstellar", "Adventure, Drama, Science Fiction", 8, "2h 49m", "https://image.tmdb.org/t/p/w1280/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg", LocalDate.of(2014, 11, 7));
 
             // Save all movies
-            movieRepository.save(movie1);
-            movieRepository.save(movie2);
-            movieRepository.save(movie3);
-            movieRepository.save(movie4);
-            movieRepository.save(movie5);
-            movieRepository.save(movie6);
-            movieRepository.save(movie7);
-            movieRepository.save(movie8);
-            movieRepository.save(movie9);
+            movieRepository.saveAll(List.of(
+                    movie1, movie2, movie3, movie4, movie5,
+                    movie6, movie7, movie8, movie9, movie10,
+                    movie11, movie12, movie13, movie14, movie15
+            ));
 
-            // Add existing showtimes for all movies
+            // Generate showtimes for the next few weeks
             List<Showtime> showtimes = new ArrayList<>();
-            showtimes.addAll(createDailyShowtimes("2024-11-30", movie1.getMovieID(), movie2.getMovieID(), movie3.getMovieID(), movie4.getMovieID(), movie5.getMovieID(), movie6.getMovieID(), movie7.getMovieID(), movie8.getMovieID(), movie9.getMovieID()));
-            showtimes.addAll(createDailyShowtimes("2024-12-01", movie1.getMovieID(), movie2.getMovieID(), movie3.getMovieID(), movie4.getMovieID(), movie5.getMovieID(), movie6.getMovieID(), movie7.getMovieID(), movie8.getMovieID(), movie9.getMovieID()));
 
-            // Add additional showtimes for "Deadpool & Wolverine" at Cineplex Chinook for the next 14 days
-            showtimes.addAll(createDailyShowtimesForSpecificMovie(movie6.getMovieID(), 14));
+            // List of all movies
+            List<Movie> allMovies = List.of(
+                    movie1, movie2, movie3, movie4, movie5,
+                    movie6, movie7, movie8, movie9, movie10,
+                    movie11, movie12, movie13, movie14, movie15
+            );
+
+            // Generate showtimes for each movie
+            for (Movie movie : allMovies) {
+                showtimes.addAll(createShowtimesForMovie(movie));
+            }
 
             // Save all showtimes
             showtimeRepository.saveAll(showtimes);
         };
     }
 
-    private List<Showtime> createDailyShowtimes(String date, int... movieIDs) {
-        List<Showtime> dailyShowtimes = new ArrayList<>();
-        String[] times = {"10:00 AM", "1:00 PM", "3:30 PM", "6:00 PM", "8:45 PM"};
-        int theatreID = 1;
-
-        for (int movieID : movieIDs) {
-            for (String time : times) {
-                Showtime showtime = new Showtime();
-                showtime.setTime(time);
-                showtime.setDate(date);
-                showtime.setTheatreID(theatreID++);
-                showtime.setMovieID(movieID);
-
-                // Generate seats for this showtime
-                List<Seat> seats = generateSeatsForShowtime(showtime);
-                showtime.setSeats(seats);
-                dailyShowtimes.add(showtime);
-            }
-            theatreID = 1; // Reset theatreID for the next movie
-        }
-
-        return dailyShowtimes;
-    }
-
-    private List<Showtime> createDailyShowtimesForSpecificMovie(int movieID, int days) {
+    private List<Showtime> createShowtimesForMovie(Movie movie) {
         List<Showtime> showtimes = new ArrayList<>();
-        LocalDate today = LocalDate.now();
-        String[] times = {"9:00 AM", "12:00 PM", "3:00 PM", "6:00 PM", "9:00 PM"};
+        LocalDate startDate = LocalDate.now();
+        LocalDate endDate = startDate.plusWeeks(4); // Generate showtimes for the next 4 weeks
+        String[] times = {"10:00 AM", "3:00 PM", "10:00 PM"};
+        int[] theatreIDs = {1, 2, 3}; // Assuming you have at least 3 theatres
 
-        for (int i = 0; i < days; i++) {
-            LocalDate date = today.plusDays(i);
-            for (String time : times) {
-                Showtime showtime = new Showtime();
-                showtime.setTime(time);
-                showtime.setDate(date.toString());
-                showtime.setTheatreID(1); // Assume Cineplex Chinook has Theatre ID 1
-                showtime.setMovieID(movieID);
+        for (LocalDate date = startDate; date.isBefore(endDate); date = date.plusDays(1)) {
+            // Only add showtimes if the movie has been released
+            if (!date.isBefore(movie.getReleaseDate())) {
+                for (int theatreID : theatreIDs) {
+                    for (String time : times) {
+                        Showtime showtime = new Showtime();
+                        showtime.setTime(time);
+                        showtime.setDate(date.toString());
+                        showtime.setTheatreID(theatreID);
+                        showtime.setMovieID(movie.getMovieID());
 
-                // Generate seats for this showtime
-                List<Seat> seats = generateSeatsForShowtime(showtime);
-                showtime.setSeats(seats);
-                showtimes.add(showtime);
+                        // Generate seats for this showtime
+                        List<Seat> seats = generateSeatsForShowtime(showtime);
+                        showtime.setSeats(seats);
+                        showtimes.add(showtime);
+                    }
+                }
             }
         }
 
