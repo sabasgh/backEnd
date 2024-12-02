@@ -20,6 +20,9 @@ public class TicketService {
     private UserRepository userRepository;
 
     @Autowired
+    private RegisteredUserRepository registeredUserRepository;
+
+    @Autowired
     private ShowtimeRepository showtimeRepository;
 
     @Autowired
@@ -82,7 +85,13 @@ public class TicketService {
         Ticket ticket = new Ticket(seatNumber, showtime, date, ticketStatus, user, payment);
         ticketRepository.save(ticket);
         user.getTicketHistory().add(ticket);
-        userRepository.save(user);
+        if (user.getUserType().equals("Registered")) {
+            RegisteredUser registeredUser = registeredUserRepository.findById(user.getUserID()).get();
+            registeredUser.setCreditPoints(registeredUser.getCreditPoints() + 10);
+            registeredUserRepository.save(registeredUser);
+        } else {
+            userRepository.save(user);
+        }
         Map<String, Object> response = new HashMap<>();
         response.put("ticketID", ticket.getTicketID());
         response.put("status", "success");
