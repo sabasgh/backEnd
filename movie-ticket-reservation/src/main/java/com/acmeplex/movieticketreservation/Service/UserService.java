@@ -55,6 +55,36 @@ public class UserService {
         userProfile.put("name", user.getName());
         userProfile.put("email", user.getEmail());
         userProfile.put("address", user.getAddress());
+
+        List<Map<String, Object>> paymentHistory = user.getPaymentHistory()
+                .stream()
+                .map(payment -> Map.<String, Object>of(
+                        "paymentID", payment.getPaymentID(),
+                        "paymentType", payment.getPaymentType(),
+                        "amount", payment.getAmount(),
+                        "cardOwner", payment.getCardOwner(),
+                        "cardNumber", payment.getCardNumber(),
+                        "ccv", payment.getCcv(),
+                        "expiry", payment.getExpiry()
+                ))
+                .toList();
+        userProfile.put("paymentHistory", paymentHistory);
+
+        // Flatten Ticket History
+        List<Map<String, Object>> ticketHistory = user.getTicketHistory()
+                .stream()
+                .map(ticket -> Map.<String, Object>of(
+                        "ticketID", ticket.getTicketID(),
+                        "showtimeID", ticket.getShowtime().getShowtimeID(),
+                        "seatNumber", ticket.getSeatNumber(),
+                        "theatreID", ticket.getShowtime().getTheatreID(),
+                        "movieID", ticket.getShowtime().getMovieID(),
+                        "date", ticket.getDate(),
+                        "status", ticket.getStatus()
+                ))
+                .toList();
+
+        userProfile.put("ticketsHistory", ticketHistory);
         userProfile.put("creditPoints", user.getCreditPoints());
         List<Map<String, Object>> paymentMethods = user.getPaymentMethods()
                 .stream()
